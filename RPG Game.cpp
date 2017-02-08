@@ -33,9 +33,7 @@ struct Player : Character{
 }p(4, 5, 100); //Declara o objecto p, que vai ser o único objecto Player
 
 bool game_on = true,last_wasEnemy = false; 
-/*Declara dois booleans,game_on e last_wasEnemy (este vai ser utilizado para não apagar os inimigos
-caso o player se mova na mesma posição que os inimigos estão e não os mate
-*/
+//Declara dois booleans,game_on e last_wasEnemy
 int curMap;
 
 int main()
@@ -95,28 +93,34 @@ void getAction() {
 	Attack();
 }
 void Move(int key, int key2, int yNum, int xNum) {
-	if (GetAsyncKeyState(key) || GetAsyncKeyState(key2)) {
-		if (Map[curMap][yNum][xNum] != '#') {
+	//Os argumentos da função: Tecla1,Tecla2,posição yNova,posição xNova
+	if (GetAsyncKeyState(key) || GetAsyncKeyState(key2)) { //Se a tecla premida é uma das teclas nos argumentos
+		if (Map[curMap][yNum][xNum] != '#') { //Se o char na posição que o player vai se mover é diferente de '#'
 			if(last_wasEnemy) Map[curMap][p.yPos][p.xPos] = '$', last_wasEnemy = false;
-			else Map[curMap][p.yPos][p.xPos] = ' ';
+			//Se last_wasEnemy é verdadeiro a posição que o player está é igual a '$' (se o player acabou de "partilhar o char" com um inimigo
+			else Map[curMap][p.yPos][p.xPos] = ' '; //Se last_wasEnemy não é verdadeiro a posição em que o player está é igual a ' ' (o player sai da posição)
 			if (Map[curMap][yNum][xNum] == 'E') p.hp -= 20, last_wasEnemy = true;
-			if (Map[curMap][yNum][xNum] == 'b' || Map[curMap][yNum][xNum] == 'B' || Map[curMap][yNum][xNum] == '|' || Map[curMap][yNum][xNum] == '_') { changeMap(yNum, xNum); return; }
-
-			p.yPos = yNum;
+			//Se o char na posição em que o player deve se mover é 'E' (inimigo) o player perde 20 de vida e a var last_wasEnemy é verdadeira
+			if (Map[curMap][yNum][xNum] == 'b' || Map[curMap][yNum][xNum] == 'B' || Map[curMap][yNum][xNum] == '|' 
+			    || Map[curMap][yNum][xNum] == '_') { changeMap(yNum, xNum); return; }
+			//Se o char na posição em que o player deve se mover é 'b','B','|' ou '_' chamar a função changeMap e logo a seguir terminar a função Move()
+			
+			p.yPos = yNum; 
 			p.xPos = xNum;
-			Map[curMap][p.yPos][p.xPos] = '@';
+			//Se não, a posição y do player é igual à posição yNova e a posição x é igual à posição xNova
+			Map[curMap][p.yPos][p.xPos] = '@'; //O char na posição do player é igual a '@'
 
-			Print();
+			Print(); //Chamar a função Print()
 		}
 	}
 }
 void Attack() {
-	if (GetAsyncKeyState('F')) {
+	if (GetAsyncKeyState('F')) { //Se a tecla premida é 'F'
 		if (Map[curMap][p.yPos + 1][p.xPos] == 'E') Map[curMap][p.yPos + 1][p.xPos] = '$';
 		else if (Map[curMap][p.yPos - 1][p.xPos] == 'E') Map[curMap][p.yPos - 1][p.xPos] = '$';
 		else if (Map[curMap][p.yPos][p.xPos + 1] == 'E') Map[curMap][p.yPos][p.xPos + 1] = '$';
 		else if (Map[curMap][p.yPos][p.xPos - 1] == 'E') Map[curMap][p.yPos][p.xPos - 1] = '$';
-
+		//Se o char nas posições acima referidas for 'E' esse char na tal posição é igual a '$'
 		Print();
 	}
 }
@@ -126,30 +130,30 @@ void Options() {
 
 }
 void changeMap(int yNum,int xNum) {
-	switch (curMap) {
-	case 0:
-		if (Map[curMap][yNum][xNum] == 'b') {
-			curMap = 1;
-			p.yPos = 2;
+	switch (curMap) { //Se o mapa atual for:
+	case 0: 
+		if (Map[curMap][yNum][xNum] == 'b') { //Se o "edifício" for um bar
+			curMap = 1; //O mapa atual muda para 1
+			p.yPos = 2; //As posições do player mudam
 			p.xPos = 1;
 		}
 		else if (Map[curMap][yNum][xNum] == 'B') {
-			curMap = 2;
-			p.yPos = 4;
+			curMap = 2; //O mapa atual muda para 2
+			p.yPos = 4; //As posições do player mudam
 			p.xPos = 16;
 		}
 		break;
 	case 1:
-		curMap = 0;
-		p.yPos = 6;
+		curMap = 0; //O mapa atual muda para 0
+		p.yPos = 6; //As posições do player mudam
 		p.xPos = 2;
 		break;
 	case 2:
-		curMap = 0;
-		p.yPos = 2;
+		curMap = 0; //O mapa atual muda para 0
+		p.yPos = 2; //As posições do player mudam
 		p.xPos = 6;
 		break;
 	}
-	Map[curMap][p.yPos][p.xPos] = '@';
-	Print();
+	Map[curMap][p.yPos][p.xPos] = '@'; //O char na posição em que o player está é igual a '@'
+	Print(); //Chamar a função Print()
 }
