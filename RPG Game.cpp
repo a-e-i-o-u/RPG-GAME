@@ -35,7 +35,7 @@ struct Player : Character{
 
 bool game_on = true,last_wasEnemy = false; 
 //Declara dois booleans,game_on e last_wasEnemy
-int curMap;
+unsigned int curMap;	//Unsigned to only have positive numbers only.
 
 int main()
 {
